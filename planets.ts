@@ -1,10 +1,4 @@
-import express from "express"
-
-const app= express()
-const port = 3000
-app.use(morgan("dev"))
-app.use(express.json())
-
+import {Request, Response} from "express"
 
 type Planet ={
     id: Number;
@@ -13,42 +7,35 @@ type Planet ={
 
 type Planets = Planet[];
 
-let planets = [
+let planets: Planets = [
     {id: 1, name: "Earth"},
-    {id: 2, mame: "Mars"},]
+    {id: 2, name : "Mars"},
+];
 
-app.get("/api/planets/:id", (req , res)=>{
+const getAll= (req: Request , res: Response)=>{
     res.status(200).json(planets)
-})
-
-app.get("/api/planets/:id", (req, res) =>{
+};
+const getOneById=  (req:Request, res:Response) =>{
     const { id } = req.params;
     const planet =planets.find(p => p.id=== Number(id))
     res.satus(200).json(planet);
-})
-
-app.post("/api/planets" , (req, res )=>{
+};
+const create= (req: Request, res:Response )=>{
     const {id} = req.body 
     const newPlanet = {id, name}
     planets = [...planets , newPlanet]
     console.log(planets)
-    res.status(201).json({ msg: `The planets was created`})
-})
-
-app.put("/api/planets" , (req, res)=>{
+    res.status(201).json({ msg: `The planets was created`})};
+const createById=  (req: Request, res: Response)=>{
     const{id}= req.params
     const {name}= req.body
     planets= planets.map(p=> p.id===Number(id) ? ({ ...p, name}) :p)
     console.log(planets);
     res.status(200).json({ msg: "the planet was updated"})
-})
-
-app.delete("/api/planets:id", (req, res)=>{
+};
+const deleteById = (req: Request, res: Response)=>{
     const{id} = req.params
     planets = planets.filter(p=> p.id!==Number(id))
     res.status(200).json({ msg: "the planet was deleted"})
-})
-
-app.listem(port , ()=>{ 
-    console.log(`Example app is listenig on port http://localhost:${port}`)
-});
+}
+export{ getAll, createById, deleteById, getOneById, create}
